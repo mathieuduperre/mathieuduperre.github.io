@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx
+          - name: nginx-content
+            mountPath: /var/www/html
+      volumes:
+      - name: nginx-config
+        hostPath:
+          path: /etc/nginx
+      - name: nginx-content
+        hostPath:
+          path: /var/www/html
