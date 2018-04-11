@@ -1,0 +1,10 @@
+curl -L -s "https://10.21.42.100?[1-1009907]" &
+pidlist="$pidlist $!"
+curl -L -s "https://10.21.42.100?[1-1009907]" &
+pidlist="$pidlist $!"
+curl -L -s "https://10.21.42.100?[1-1009907]" &
+pidlist="$pidlist $!"
+curl -L -s "https://10.21.42.100?[1-1009907]" &
+pidlist="$pidlist $!"
+curl -L -s "https://10.21.42.100?[1-1009907]" &
+pidlist="$pidlist $!"
