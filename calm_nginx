@@ -1,0 +1,40 @@
+yum -y update
+yum -y install epel-release
+yum -y install nginx
+systemctl disable firewalld
+systemctl stop firewalld
+yum -y install git
+yum update -y nss curl libcurl
+yum -y install epel-release
+yum -y install nginx
+sed -i -e 's/enforcing/disabled/g' /etc/selinux/config 
+mkdir -p /var/www/html
+git clone https://github.com/mjastad/uptick.git
+
+cd uptick/
+cp index.html /var/www/html/.
+mkdir /var/www/
+mkdir /var/www/html
+mv index.html /var/www/html/.
+mv fonts /var/www/html/.
+mv css /var/www/html/.
+mv images /var/www/html/.
+mv js /var/www/html/.
+chmod -R 755 /var/www
+chmod -R 755 /var/www/html/*
+
+
+# moves repo files to default nginx directory (this example doesn't use /var/www/html to serve the files)
+mv -f * /usr/share/nginx/html/
+chmod -R 755 /usr/share/nginx/html/
+cd /usr/share/nginx/html/
+sed -i -e 's/NODE_SERVER_IP_ADDRESS/'@@{NodeJSServer.address}@@'/g' /var/www/html/js/data.js
+sed -i -e 's/\/usr\/share\/nginx\/html/\/var\/www\/html/g' /etc/nginx/nginx.conf
+yum install -y yum-utils device-mapper-persistent-data lvm2
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum-config-manager --enable docker-ce-edge
+yum-config-manager --enable docker-ce-test
+yum-config-manager --disable docker-ce-edge
+yum install -y docker-ce
+systemctl start docker
+docker run -v /etc/nginx:/etc/nginx -v /var/www/html:/var/www/html -d -p 80:80 nginx
