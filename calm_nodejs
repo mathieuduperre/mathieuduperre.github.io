@@ -1,0 +1,44 @@
+yum -y update
+yum -y install epel-release
+systemctl disable firewalld
+systemctl stop firewalld
+yum -y install nodejs
+yum -y install git
+yum update -y nss curl libcurl
+ 
+git clone http://github.com/mjastad/uptick.git
+
+#Above works
+yum -y install wget
+ yum -y install epel-release
+ yum -y install nodejs
+ yum -y install git
+ yum update -y nss curl libcurl
+ git clone http://github.com/mjastad/uptick.git
+ cd uptick/
+ npm build
+ 
+sed -i -e 's/enforcing/disabled/g' /etc/selinux/config 
+mkdir -p /var/www/html
+cd /var/www/html
+chmod -R 755 uptick/
+cd uptick
+npm build
+sed -i -e 's/\/usr\/share\/nginx\/html/\/var\/www\/html/g' /etc/nginx/nginx.conf
+sed -i -e 's/NODE_SERVER_IP_ADDRESS/'$IP_ADDRESS'/g' /var/www/html/uptick/js/data.js
+sed -i -e 's/DB_SERVER_IPADDRESS/10.21.42.167/g' /root/uptick/config/mysqlConfig.js
+sed -i -e 's/DB_USER/root/g' /root/uptick/config/mysqlConfig.js
+sed -i -e 's/DB_PASSWORD/nutanix\/4u/g' /root/uptick/config/mysqlConfig.js
+sed -i -e 's/DB_NAME/Uptick/g' /root/uptick/config/mysqlConfig.js
+yum install -y yum-utils device-mapper-persistent-data lvm2
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum-config-manager --enable docker-ce-edge
+yum-config-manager --enable docker-ce-test
+yum-config-manager --disable docker-ce-edge
+yum install -y docker-ce
+systemctl start docker
+git clone https://github.com/mathieuduperre/mathieuduperre.github.io.git
+cp /var/www/html/mathieuduperre.github.io/Dockerfile /root/uptick/.
+docker build -t nodejsimg /root/uptick/.
+docker run -p 3000:3000 -p 3306:3306 -d nodejsimg
+
